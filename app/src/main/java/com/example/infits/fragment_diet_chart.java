@@ -1,6 +1,7 @@
 package com.example.infits;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -33,6 +34,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.tenclouds.gaugeseekbar.GaugeSeekBar;
 
 import org.json.JSONArray;
@@ -52,13 +54,14 @@ public class fragment_diet_chart extends Fragment {
     GaugeSeekBar progressBar,progressBarProtein,progressBarCarbs,progressBarFats;
 
     ImageView back,gaugeSeekMiddleIcon;
+    View bottomSheetd;
     Button btn_meal_check;
 
     //for calories protein carbs fats click listener
     AppCompatButton btn_calories,btn_proteins,btn_carbs,btn_fats;
     TextView gaugeSeekMiddleText,gaugeSeekMiddleTextValue,gaugeSeekMiddleTextUnit;
 
-   //for spinner
+    //for spinner
     Spinner dailySpinner,btn_meal;
 
     //for progress bar
@@ -80,6 +83,7 @@ public class fragment_diet_chart extends Fragment {
     @Override
     public void onCreate ( Bundle savedInstanceState ) {
         super.onCreate ( savedInstanceState );
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -101,35 +105,39 @@ public class fragment_diet_chart extends Fragment {
                 R.array.spinner_diet_breakfast,R.layout.diet_spinner_dropdown_item );
         breakfastAdapter.setDropDownViewResource(R.layout.diet_spinner_layout);
         btn_meal.setAdapter(breakfastAdapter);
+//        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view.findViewById(R.id.bottomSheetd));
+//        bottomSheetBehavior.setPeekHeight(780);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//
 
 
 
         //for click selected item
-       btn_meal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-           @Override
-           public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-               if (btn_meal.getSelectedItem().equals("Breakfast")) {
-                   viewListModels.clear();
-                   todayMealDietChartModelAdapter.notifyDataSetChanged();
-                   reqWithoutRecipeNameCall("breakfast","breakfast_morning","breakfast_after","7AM to 8AM","After Breakfast");
-               } else if (btn_meal.getSelectedItem().equals("Snacks")) {
-                   viewListModels.clear();
-                   todayMealDietChartModelAdapter.notifyDataSetChanged();
-                   reqWithoutRecipeNameCall("snacks","High Tea and Snacks","Snacks time");
-               }else if (btn_meal.getSelectedItem().equals("Lunch")) {
-                   viewListModels.clear();
-                   todayMealDietChartModelAdapter.notifyDataSetChanged();
-                   reqWithoutRecipeNameCall("lunch","afternoon","01:00 PM");
-               }else {
-                   viewListModels.clear();
-                   todayMealDietChartModelAdapter.notifyDataSetChanged();
-                   reqWithoutRecipeNameCall("dinner","night","late_night","7PM to 9PM","After Dinner");
-               }
-           }
-           @Override
-           public void onNothingSelected(AdapterView<?> adapterView) {
-           }
-       });
+        btn_meal.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (btn_meal.getSelectedItem().equals("Breakfast")) {
+                    viewListModels.clear();
+                    todayMealDietChartModelAdapter.notifyDataSetChanged();
+                    reqWithoutRecipeNameCall("breakfast","breakfast_morning","breakfast_after","7AM to 8AM","After Breakfast");
+                } else if (btn_meal.getSelectedItem().equals("Snacks")) {
+                    viewListModels.clear();
+                    todayMealDietChartModelAdapter.notifyDataSetChanged();
+                    reqWithoutRecipeNameCall("snacks","High Tea and Snacks","Snacks time");
+                }else if (btn_meal.getSelectedItem().equals("Lunch")) {
+                    viewListModels.clear();
+                    todayMealDietChartModelAdapter.notifyDataSetChanged();
+                    reqWithoutRecipeNameCall("lunch","afternoon","01:00 PM");
+                }else {
+                    viewListModels.clear();
+                    todayMealDietChartModelAdapter.notifyDataSetChanged();
+                    reqWithoutRecipeNameCall("dinner","night","late_night","7PM to 9PM","After Dinner");
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         //for calorie button click listener
         btn_calories.setOnClickListener(view1 -> {
@@ -287,58 +295,61 @@ public class fragment_diet_chart extends Fragment {
 
         //for fats click listener
         btn_fats.setOnClickListener(view1 -> {
-                    btn_proteins.setBackground(getResources().getDrawable(R.drawable.protien_bg));
-                    btn_calories.setBackground(getResources().getDrawable(R.drawable.protien_bg));
-                    btn_carbs.setBackground(getResources().getDrawable(R.drawable.protien_bg));
-                    btn_fats.setBackground(getResources().getDrawable(R.drawable.btn_bg_fats));
-                    gaugeSeekMiddleIcon.setBackground(getResources().getDrawable(R.drawable.fats));
-                    gaugeSeekMiddleText.setText("Fats");
-                    gaugeSeekMiddleTextUnit.setText("g");
-                    String url = "https://infits.in/androidApi/calorieTracker.php"; // main database api
-                    RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
-                    StringRequest request = new StringRequest(Request.Method.POST, url,
-                            response -> {
-                                Log.d("Tracker macro", response);
+            btn_proteins.setBackground(getResources().getDrawable(R.drawable.protien_bg));
+            btn_calories.setBackground(getResources().getDrawable(R.drawable.protien_bg));
+            btn_carbs.setBackground(getResources().getDrawable(R.drawable.protien_bg));
+            btn_fats.setBackground(getResources().getDrawable(R.drawable.btn_bg_fats));
+            gaugeSeekMiddleIcon.setBackground(getResources().getDrawable(R.drawable.fats));
+            gaugeSeekMiddleText.setText("Fats");
+            gaugeSeekMiddleTextUnit.setText("g");
+            String url = "https://infits.in/androidApi/calorieTracker.php"; // main database api
+            RequestQueue requestQueue = Volley.newRequestQueue(requireActivity());
+            StringRequest request = new StringRequest(Request.Method.POST, url,
+                    response -> {
+                        Log.d("Tracker macro", response);
 
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
 
-                                    JSONObject dataObject = jsonObject.getJSONObject("Data"); // calling the object from api
-                                    JSONObject goalsObject = dataObject.getJSONObject("values"); //goals has all goals of item protien fibers fats etc
+                            JSONObject dataObject = jsonObject.getJSONObject("Data"); // calling the object from api
+                            JSONObject goalsObject = dataObject.getJSONObject("values"); //goals has all goals of item protien fibers fats etc
 
-                                    String fats = goalsObject.getString("Fat");
-                                    gaugeSeekMiddleTextValue.setText(fats);
+                            String fats = goalsObject.getString("Fat");
+                            gaugeSeekMiddleTextValue.setText(fats);
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }, error -> Log.e("Traget Macro", error.toString())) {
-                        @Nullable
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> data = new HashMap<>();
-                            LocalDateTime now = LocalDateTime.now();// gets the current date and time
-                            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd H:m:s");
-                            data.put("clientID", DataFromDatabase.clientuserID);
-                            data.put("today", dtf.format(now));
-                            return data;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    };
-                    Volley.newRequestQueue(requireContext()).add(request);
-                    request.setRetryPolicy(new DefaultRetryPolicy(50000,
-                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                    }, error -> Log.e("Traget Macro", error.toString())) {
+                @Nullable
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> data = new HashMap<>();
+                    LocalDateTime now = LocalDateTime.now();// gets the current date and time
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd H:m:s");
+                    data.put("clientID", DataFromDatabase.clientuserID);
+                    data.put("today", dtf.format(now));
+                    return data;
+                }
+            };
+            Volley.newRequestQueue(requireContext()).add(request);
+            request.setRetryPolicy(new DefaultRetryPolicy(50000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             progressBar.setVisibility(View.INVISIBLE);
             progressBarProtein.setVisibility(View.INVISIBLE);
             progressBarCarbs.setVisibility(View.INVISIBLE);
             progressBarFats.setVisibility(View.VISIBLE);
         });
 
-        back.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragment_diet_chart_to_dashBoardFragment));
+        back.setOnClickListener(v -> {
+
+            Navigation.findNavController(v).navigate(R.id.action_fragment_diet_chart_to_dashBoardFragment);
+        });
 
         progressBar.setProgress(.75f);
-      ///  btn_meal_check.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragment_diet_chart_to_stepReminderFragment));
+        ///  btn_meal_check.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragment_diet_chart_to_stepReminderFragment));
 
         btn_meal_check.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_fragment_diet_chart_to_diet_fourth2));
 
@@ -370,6 +381,13 @@ public class fragment_diet_chart extends Fragment {
         todayMealDietChartModelAdapter = new TodayMealDietChartModelAdapter(requireActivity(),viewListModels);
         recyclerView.setAdapter(todayMealDietChartModelAdapter);
         viewListModels.clear();
+        bottomSheetd = view.findViewById(R.id.bottomSheetd);
+
+        BottomSheetBehavior.from(bottomSheetd).setPeekHeight(780);
+
+        BottomSheetBehavior.from(bottomSheetd).setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
     }
     private void reqWithoutRecipeNameCall(String key1,String key2,String key3,String time1,String time2){
         processBar.setVisibility(View.VISIBLE);
@@ -392,7 +410,7 @@ public class fragment_diet_chart extends Fragment {
                             JSONArray key2_data = new JSONArray(key1_data.getString(key2));
                             JSONArray key3_data = new JSONArray(key1_data.getString(key3));
                             for (int i = 0; i < key2_data.length(); i++) {
-                                    todayMealDietChartModel = new TodayMealDietChartModel(getRecipeName(key2_data.getString(i)),fdn.format(new Date()),time1);
+                                todayMealDietChartModel = new TodayMealDietChartModel(getRecipeName(key2_data.getString(i)),fdn.format(new Date()),time1);
                                 viewListModels.add(todayMealDietChartModel);
                             }
                             for (int i = 0; i < key3_data.length(); i++) {
